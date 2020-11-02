@@ -75,7 +75,11 @@ client.on('message', async message => {
       "   Queues a random recommended song (based off the current song) to the queue.\n"+
       "g!search [search query]]\n"+
       "   Gets the first five results on a search query.\n"+
-      "   Optionally add -n [number] to choose max results (up to 20)```"
+      "   Optionally add -n [number] to choose max results (up to 20)\n"+
+      "g!smug\n"+
+      "   Posts a smug reaction image.\n"+
+      "g!reacc\n"+
+      "   Posts an anime reaction image.\n```"
     )
   
   } else if (message.content.startsWith(`${prefix}smug`)){
