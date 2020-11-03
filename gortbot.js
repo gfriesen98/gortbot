@@ -71,6 +71,10 @@ client.on('message', async message => {
       "   Adds a video to the queue.\n"+
       "g!skip\n"+
       "   Skips the current song in the queue. Ends playback if the queue is empty.\n"+
+      "g!next\n"+
+      "   Shows the next three songs in the queue.\n"+
+      "g!current\n"+
+      "   Shows the currently playing song.\n"+
       "g!recc\n"+
       "   Queues a random recommended song (based off the current song) to the queue.\n"+
       "g!search [search query]]\n"+
@@ -92,6 +96,10 @@ client.on('message', async message => {
     message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772965800784691251/UKRrxHDk-Vs0_61C.mp4')
   } else if (message.content.startsWith(`${prefix}smiling`)){
     message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772967994769801236/cloutgang.mp4');
+  } else if (message.content.startsWith(`${prefix}next`)){
+    music.upNext(message);
+  } else if (message.content.startsWith(`${prefix}current`)){
+    music.nowPlaying(message);
   }
 
   else {

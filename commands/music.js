@@ -36,6 +36,14 @@ async function playSong(message) {
     return message.channel.send("You need to be in the #dj channel.");
   }
 
+  voiceChannel = message.member.voice.channel;
+  const perms = voiceChannel.permissionsFor(message.client.user);
+  if (!perms.has("CONNECT") || !perms.has("SPEAK")) {
+    return message.channel.send("I need permissions to speak in the voice channel.");
+  }
+
+  connection = await voiceChannel.join();
+
 
   if (queue.length === 0) {
     const songInfo = await ytdl.getInfo(args[1]);
@@ -55,19 +63,11 @@ async function playSong(message) {
 
     try{
 
-      voiceChannel = message.member.voice.channel;
-      const perms = voiceChannel.permissionsFor(message.client.user);
-      if (!perms.has("CONNECT") || !perms.has("SPEAK")) {
-        return message.channel.send("I need permissions to speak in the voice channel.");
-      }
-    
-      connection = await voiceChannel.join();
-
       //start music playback via dispatcher
       dispatcher = connection
         .play(await ytdl(queue[0].url,
           {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1<<25}),
-          {type: 'opus', highWaterMark: 10})
+          {type: 'opus', highWaterMark: 50})
         .on("finish", () => {
           if(queue.length === 0){
             voiceChannel.leave();
@@ -330,6 +330,34 @@ function resume(message){
   return message.channel.send(messageEmbed);
 }
 
+function upNext(message){
+  if (message.channel.name !== 'dj'){
+    return message.channel.send('You need to be in the #dj channel.');
+  }
+
+  messageEmbed = new MessageEmbed()
+    .setColor('#0dac4e')
+    .setTitle("🎵 Up Next");
+
+  for(let i = 1; i < 4; i++){
+    messageEmbed.setDescription(`${queue[i].title}\n${queue[i].url}`);
+    message.channel.send(messageEmbed);
+  }
+}
+
+function nowPlaying(message){
+  if (message.channel.name !== 'dj'){
+    return message.channel.send('You need to be in the #dj channel.');
+  }
+
+  messageEmbed = new MessageEmbed()
+    .setColor('#0dac4e')
+    .setTitle(`🎶 Now Playing: ${queue[0].title}`)
+    .setDescription(queue[0].url);
+
+  return message.channel.send(messageEmbed);
+}
+
 module.exports = {
   playSong,
   stopSong,
@@ -338,5 +366,7 @@ module.exports = {
   searchYt,
   getNextVideoOnURL,
   pause,
-  resume
+  resume,
+  upNext,
+  nowPlaying
 };

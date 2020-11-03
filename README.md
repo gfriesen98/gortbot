@@ -12,20 +12,18 @@ A music playing bot for discord.
 * `g!recc` queues a video based off of the currently playing one
 * `g!search [query]` searches youtube based off a query. default max result is 5
   * optionally append `-n [1-20]` after the query to control the amount of results
+* `g!pause/resume`  pauses/resumes playback
+* `g!next`  shows the next 3 songs in the queue
+* `g!current`   shows the current song
+* `g!smug`  shows a smug image
+* `g!reacc`   shows an anime reaction image
+* `g!society` YOU BROOOKE MEEEEEE
+* `g!smiling` *you like girls? smash that mf like button 😥*
 
 ## Setup
 1. Clone this repository
-2. Get a Discord Developer account and create an app
-3. Get a YouTube Data v3 api key
-4. Create a file in the cloned repository called `config.json`
-5. Make it look like this
-
-```json
-{
-  "discord_token": "your_token_here",
-  "google_key": "your_google_key_here",
-  "smug_path":  "./images/smug",
-  "reacc_path": "./images/anime"
-}
-```
+2. Get a Discord Developer account and create an app. [Read this article for more information](https://discord.com/developers/docs/intro)
+3. Get a YouTube Data v3 api key. [Read this article for more information](https://developers.google.com/youtube/v3/getting-started)
+4. Edit `config_example.json` and fill out the fields for `discord_token` and `google_key`
+5. Rename to just `config.json`
 6. Start with `node gortbot.js`
