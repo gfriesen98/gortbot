@@ -79,13 +79,19 @@ client.on('message', async message => {
       "g!smug\n"+
       "   Posts a smug reaction image.\n"+
       "g!reacc\n"+
-      "   Posts an anime reaction image.\n```"
+      "   Posts an anime reaction image.\n"+
+      "g!society\n"+
+      "g!smiling\n```"
     )
   
   } else if (message.content.startsWith(`${prefix}smug`)){
     message.channel.send({files: [`${smug_path}/${smug[Math.floor(Math.random()*smug.length)+1]}`]})
   } else if (message.content.startsWith(`${prefix}reacc`)){
     message.channel.send({files: [`${reacc_path}/${reacc[Math.floor(Math.random()*reacc.length)+1]}`]})
+  } else if (message.content.startsWith(`${prefix}society`)){
+    message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772965800784691251/UKRrxHDk-Vs0_61C.mp4')
+  } else if (message.content.startsWith(`${prefix}smiling`)){
+    message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772967994769801236/cloutgang.mp4');
   }
 
   else {
