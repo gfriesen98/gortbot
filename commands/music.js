@@ -31,6 +31,11 @@ async function playSong(message) {
     return message.channel.send("You need to be in a voice channel.");
   }
 
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
+
   if (queue.length === 0) {
     const songInfo = await ytdl.getInfo(args[1]);
     console.log(songInfo);
@@ -99,6 +104,11 @@ async function queueSong(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
+
   const args = message.content.split(" ");
   try{
 
@@ -155,6 +165,11 @@ function stopSong(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
+
   console.log("stopping song connection");
   dispatcher.end();
 
@@ -173,6 +188,11 @@ function skipSong(message){
   if (!message.member.voice.channel){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
+
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
   if(!queue){
     return message.channel.send("Got nothin to skip 😔");
   }
@@ -222,6 +242,10 @@ async function searchYt(message) {
  * @param {message} message from sender
  */
 async function getNextVideoOnURL(message) {
+
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
 
   console.log(queue[0].title);
 
@@ -276,6 +300,10 @@ async function getNextVideoOnURL(message) {
 }
 
 function pause(message){
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
   dispatcher.pause();
 
   messageEmbed = new MessageEmbed()
@@ -286,6 +314,10 @@ function pause(message){
 }
 
 function resume(message){
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
   dispatcher.resume();
 
   messageEmbed = new MessageEmbed()
