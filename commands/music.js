@@ -45,6 +45,10 @@ async function playSong(message) {
   connection = await voiceChannel.join();
 
 
+  //Should only run this portion of the if statement the first time g!play is used.
+  // We need to start a queue as well as start playback on the same command
+  // I should probably break it out
+
   if (queue.length === 0) {
     const songInfo = await ytdl.getInfo(args[1]);
     console.log(songInfo);
@@ -253,7 +257,7 @@ async function getNextVideoOnURL(message) {
   console.log(queue[0].title);
 
   var reccOpts = {
-    maxResults: 20,
+    maxResults: 10,
     key: google_key,
     relatedToVideoId: queue[0].id,
     type: [
@@ -261,26 +265,38 @@ async function getNextVideoOnURL(message) {
     ]
   }
 
-  youtube('', reccOpts, (err, results) => {
+  youtube('', reccOpts, async (err, results) => {
     if (err) return console.log(err);
 
     //Select a random index to select
-    let idx = Math.floor(Math.random()*20)+1
+    let idx = Math.floor(Math.random()*10)+1
 
     conflict_idx = checkQueueConflicts(results[idx].title);
     if (conflict_idx !== false){
       return message.channel.send(`This one already in the queue 😔`);
     }
 
+    const songInfo = await ytdl.getInfo(results[idx].link);
+    console.log(songInfo);
     queue.push(
       {
-        title: results[idx].title,
-        url: results[idx].link,
-        id: results[idx].id,
-        image_url: results[idx].thumbnails.default.url,
+        title: songInfo.videoDetails.title,
+        url: songInfo.videoDetails.video_url,
+        id: songInfo.videoDetails.videoId,
+        image_url: songInfo.videoDetails.thumbnail.thumbnails[0].url,
         requester: message.member.displayName
       }
     );
+
+    // queue.push(
+    //   {
+    //     title: results[idx].title,
+    //     url: results[idx].link,
+    //     id: results[idx].id,
+    //     image_url: results[idx].thumbnails.default.url,
+    //     requester: message.member.displayName
+    //   }
+    // );
 
     let song_position = 0;
 
