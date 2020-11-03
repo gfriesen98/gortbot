@@ -1,4 +1,5 @@
-const ytdl = require('ytdl-core');
+// const ytdl = require('ytdl-core');
+const ytdl = require('ytdl-core-discord');
 const youtube = require('youtube-search');
 const { MessageEmbed } = require('discord.js');
 const { google_key } = require('../config.json');
@@ -64,7 +65,9 @@ async function playSong(message) {
 
       //start music playback via dispatcher
       dispatcher = connection
-        .play(ytdl(queue[0].url))
+        .play(await ytdl(queue[0].url,
+          {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1<<25}),
+          {type: 'opus', highWaterMark: 10})
         .on("finish", () => {
           if(queue.length === 0){
             voiceChannel.leave();

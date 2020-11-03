@@ -98,6 +98,7 @@
     "yallist": "^4.0.0",
     "youtube-search": "^1.1.4",
     "ytdl-core": "^4.0.0",
+    "ytdl-core-discord": "^1.2.4",
     "ytsr": "^1.0.4"
   },
   "devDependencies": {},
