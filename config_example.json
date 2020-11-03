@@ -1,0 +1,7 @@
+{
+  "prefix": "g!",
+  "discord_token": "your_token_here",
+  "google_key": "your_key_here",
+  "smug_path": "./images/smug",
+  "reacc_path": "./images/anime"
+}
