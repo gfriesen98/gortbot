@@ -192,12 +192,15 @@ function stopSong(message){
 
   console.log("stopping song connection");
   dispatcher.end();
+  dispatcher = null;
 
   console.log("clearing queue");
   queue = [];
 
   console.log("leaving channel");
   voiceChannel.leave();
+  voiceChannel = null;
+  connection = null;
 }
 
 /**
