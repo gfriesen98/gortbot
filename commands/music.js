@@ -50,7 +50,7 @@ async function playSong(message) {
   // I should probably break it out
 
   if (queue.length === 0) {
-    const songInfo = await ytdl.getInfo(args[1]);
+    let songInfo = await ytdl.getInfo(args[1]);
     if (!songInfo){
       playSong(message);
     }
@@ -89,7 +89,7 @@ async function playSong(message) {
         })
         .on("error", error => console.log(error));
       
-      const messageEmbed = new MessageEmbed()
+      let messageEmbed = new MessageEmbed()
         .setColor('#0dac4e')
         .setTitle(`▶️ Now Playing: ${queue[0].title}`)
         .setDescription(queue[0].url)
@@ -127,7 +127,7 @@ async function queueSong(message){
   const args = message.content.split(" ");
   try{
 
-    const songInfo = await ytdl.getInfo(args[1]);
+    let songInfo = await ytdl.getInfo(args[1]);
 
     conflict_idx = checkQueueConflicts(songInfo.videoDetails.title);
     if (conflict_idx !== false){
@@ -259,7 +259,7 @@ async function searchYt(message) {
     if (conflict_idx !== false){
       return message.channel.send(`This one already in the queue 😔`);
     }
-    const songInfo = await ytdl.getInfo(results[0].link);
+    let songInfo = await ytdl.getInfo(results[0].link);
     queue.push(
       {
         title: songInfo.videoDetails.title,
@@ -332,7 +332,7 @@ async function getNextVideoOnURL(message) {
       return message.channel.send(`This one already in the queue 😔`);
     }
 
-    const songInfo = await ytdl.getInfo(results[idx].link);
+    let songInfo = await ytdl.getInfo(results[idx].link);
     queue.push(
       {
         title: songInfo.videoDetails.title,
