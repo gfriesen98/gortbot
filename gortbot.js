@@ -78,8 +78,7 @@ client.on('message', async message => {
       "g!recc\n"+
       "   Queues a random recommended song (based off the current song) to the queue.\n"+
       "g!search [search query]]\n"+
-      "   Gets the first five results on a search query.\n"+
-      "   Optionally add -n [number] to choose max results (up to 20)\n"+
+      "   Adds a song to the queue based off a search query."+
       "g!smug\n"+
       "   Posts a smug reaction image.\n"+
       "g!reacc\n"+

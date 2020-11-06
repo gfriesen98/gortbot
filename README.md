@@ -10,8 +10,7 @@ A music playing bot for discord.
 * `g!q [url]` queue a video from a youtube url
 * `g!skip` skips the current song. ends playback if at the end of the queue
 * `g!recc` queues a video based off of the currently playing one
-* `g!search [query]` searches youtube based off a query. default max result is 5
-  * optionally append `-n [1-20]` after the query to control the amount of results
+* `g!search [query]` searches youtube and adds that video to the queue
 * `g!pause/resume`  pauses/resumes playback
 * `g!next`  shows the next 3 songs in the queue
 * `g!current`   shows the current song

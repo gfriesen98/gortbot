@@ -5,7 +5,6 @@ const { MessageEmbed } = require('discord.js');
 const { google_key } = require('../config.json');
 
 var queue = [];
-
 var voiceChannel = null;
 var connection = null;
 var dispatcher = null;
@@ -26,6 +25,7 @@ function checkQueueConflicts(title){
  * @param {message} message from sender
  */
 async function playSong(message) {
+
   const args = message.content.split(" ");
 
   if (!message.member.voice.channel){
@@ -51,6 +51,9 @@ async function playSong(message) {
 
   if (queue.length === 0) {
     const songInfo = await ytdl.getInfo(args[1]);
+    if (!songInfo){
+      playSong(message);
+    }
     console.log(songInfo);
     queue.push(
       {
@@ -96,7 +99,8 @@ async function playSong(message) {
 
     } catch (err) {
       console.log(err);
-      message.channel.send("🙂 Having some issues playing the current song. Try again 🙂");
+      message.channel.send("🙂 Having some issues playing the current song. I'll try again 🙂");
+      playSong(message);
     }
 
   }
@@ -113,6 +117,10 @@ async function queueSong(message){
 
   if (message.channel.name !== 'dj'){
     return message.channel.send("You need to be in the #dj channel.");
+  }
+
+  if (queue.length === 0) {
+    return message.channel.send("I'm too stupid to queue before playing some music, sorry 😔");
   }
 
 
@@ -176,6 +184,11 @@ function stopSong(message){
     return message.channel.send("You need to be in the #dj channel.");
   }
 
+  if (queue.length === 0) {
+    return;
+  }
+
+
 
   console.log("stopping song connection");
   dispatcher.end();
@@ -200,7 +213,7 @@ function skipSong(message){
     return message.channel.send("You need to be in the #dj channel.");
   }
 
-  if(!queue){
+  if(queue.length === 0){
     return message.channel.send("Got nothin to skip 😔");
   }
 
@@ -212,35 +225,68 @@ function skipSong(message){
  * @param {message} message from sender
  */
 async function searchYt(message) {
-  //let the user select the amount of results (max 10)
-  let args = message.content.split("-n")[1];
-  let query = message.content.split("-n")[0].split(" ");
+  if(!message.member.voice.channel){
+    return message.channel.send("You have to be in a voice channel to perform music commands !!");
+  }
+
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
+  if (queue.length === 0) {
+    return;
+  }
+
+  let query = message.content.split(" ");
   query.shift();
   query = query.join(" ");
   console.log(query);
-
-  if (!query) return message.channel.send("`g!search [search query] [optional -n [1-20] ]`");
-
-  console.log(!args ? "no args" : args.trim());
+  if (!query) return message.channel.send("`g!search [search query]`");
   var opts = {
-    maxResults: !args ? 5 : args.trim(),
-    key: google_key
+    maxResults: 1,
+    key: google_key,
+    type: [
+      "video"
+    ]
   }
-
-  youtube(query, opts, (err, results) => {
+  youtube(query, opts, async (err, results) => {
     if (err) return console.log(err);
-    
-    let results_array = results.map(o => {
-      o.title = o.title.replace("&amp;", "&");
-      return {url: o.link, title: `${o.title}`}
-    });
 
-    console.log(results_array);
-    let search_string = results_array.map((o) => {
-      return `${o.title}\n${o.url}`;
-    })
-    return message.channel.send(search_string);
+    conflict_idx = checkQueueConflicts(results[0].title);
+    if (conflict_idx !== false){
+      return message.channel.send(`This one already in the queue 😔`);
+    }
+    const songInfo = await ytdl.getInfo(results[0].link);
+    queue.push(
+      {
+        title: songInfo.videoDetails.title,
+        url: songInfo.videoDetails.video_url,
+        id: songInfo.videoDetails.videoId,
+        image_url: songInfo.videoDetails.thumbnail.thumbnails[0].url,
+        requester: message.member.displayName
+      }
+    );
+
+    let song_position = 0;
+
+    for (let i = 0; i < queue.length; i++){
+      if (queue[i].title === results[0].title){
+        song_position = i;
+        break;
+      }
+      song_position = 0;
+    }
+
+    messageEmbed = new MessageEmbed()
+      .setColor('#e08a00')
+      .setTitle(`🎧 ${results[0].title} was added to the queue`)
+      .setDescription(results[0].link)
+      .addField("Position in queue: ", `#${song_position}`, true)
+    message.channel.send(messageEmbed);
+
   });
+
+  
 }
 
 /**
@@ -249,9 +295,16 @@ async function searchYt(message) {
  * @param {message} message from sender
  */
 async function getNextVideoOnURL(message) {
+  if(!message.member.voice.channel){
+    return message.channel.send("You have to be in a voice channel to perform music commands !!");
+  }
 
   if (message.channel.name !== 'dj'){
     return message.channel.send("You need to be in the #dj channel.");
+  }
+
+  if (queue.length === 0) {
+    return;
   }
 
   console.log(queue[0].title);
@@ -277,7 +330,6 @@ async function getNextVideoOnURL(message) {
     }
 
     const songInfo = await ytdl.getInfo(results[idx].link);
-    console.log(songInfo);
     queue.push(
       {
         title: songInfo.videoDetails.title,
@@ -287,16 +339,6 @@ async function getNextVideoOnURL(message) {
         requester: message.member.displayName
       }
     );
-
-    // queue.push(
-    //   {
-    //     title: results[idx].title,
-    //     url: results[idx].link,
-    //     id: results[idx].id,
-    //     image_url: results[idx].thumbnails.default.url,
-    //     requester: message.member.displayName
-    //   }
-    // );
 
     let song_position = 0;
 
@@ -319,10 +361,17 @@ async function getNextVideoOnURL(message) {
 }
 
 function pause(message){
+  if(!message.member.voice.channel){
+    return message.channel.send("You have to be in a voice channel to perform music commands !!");
+  }
+
   if (message.channel.name !== 'dj'){
     return message.channel.send("You need to be in the #dj channel.");
   }
 
+  if (queue.length === 0) {
+    return;
+  }
   dispatcher.pause();
 
   messageEmbed = new MessageEmbed()
@@ -333,8 +382,16 @@ function pause(message){
 }
 
 function resume(message){
+  if(!message.member.voice.channel){
+    return message.channel.send("You have to be in a voice channel to perform music commands !!");
+  }
+
   if (message.channel.name !== 'dj'){
     return message.channel.send("You need to be in the #dj channel.");
+  }
+
+  if (queue.length === 0) {
+    return;
   }
 
   dispatcher.resume();
@@ -347,25 +404,44 @@ function resume(message){
 }
 
 function upNext(message){
+  if(!message.member.voice.channel){
+    return message.channel.send("You have to be in a voice channel to perform music commands !!");
+  }
+
   if (message.channel.name !== 'dj'){
-    return message.channel.send('You need to be in the #dj channel.');
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
+  if (queue.length === 0) {
+    return;
   }
 
   messageEmbed = new MessageEmbed()
     .setColor('#0dac4e')
     .setTitle("🎵 Up Next");
-
-  for(let i = 1; i < 4; i++){
-    messageEmbed.setDescription(`${queue[i].title}\n${queue[i].url}`);
+  if (queue.length === 1 || queueSong.length === 0) {
+    messageEmbed.setDescription(`Nothing!`);
     message.channel.send(messageEmbed);
+  } else {
+    for(let i = 1; i < 4; i++){
+      messageEmbed.setDescription(`${queue[i].title}\n${queue[i].url}`);
+      message.channel.send(messageEmbed);
+    }
   }
 }
 
 function nowPlaying(message){
-  if (message.channel.name !== 'dj'){
-    return message.channel.send('You need to be in the #dj channel.');
+  if(!message.member.voice.channel){
+    return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
+  if (message.channel.name !== 'dj'){
+    return message.channel.send("You need to be in the #dj channel.");
+  }
+
+  if (queue.length === 0) {
+    return;
+  }
   messageEmbed = new MessageEmbed()
     .setColor('#0dac4e')
     .setTitle(`🎶 Now Playing: ${queue[0].title}`)
