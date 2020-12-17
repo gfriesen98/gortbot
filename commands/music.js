@@ -1,5 +1,5 @@
-// const ytdl = require('ytdl-core');
-const ytdl = require('ytdl-core-discord');
+//const ytdl = require('ytdl-core-discord');
+const ytdl = require('ytdl-core');
 const youtube = require('youtube-search');
 const { MessageEmbed } = require('discord.js');
 const { google_key } = require('../config.json');
@@ -32,9 +32,9 @@ async function playSong(message) {
     return message.channel.send("You need to be in a voice channel.");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   voiceChannel = message.member.voice.channel;
   const perms = voiceChannel.permissionsFor(message.client.user);
@@ -73,11 +73,12 @@ async function playSong(message) {
       //start music playback via dispatcher
       dispatcher = connection
         .play(await ytdl(queue[0].url,
-          {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1<<25}),
-          {type: 'opus', highWaterMark: 50})
+          {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1<<25}
+	),
+          {highWaterMark: 50})
         .on("finish", () => {
           if(queue.length === 0){
-            voiceChannel.leave();
+            stopSong(message);
           } else {
             if (!queue[1]){
               stopSong(message);
@@ -115,9 +116,9 @@ async function queueSong(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if (queue.length === 0) {
     return message.channel.send("I'm too stupid to queue before playing some music, sorry 😔");
@@ -180,9 +181,9 @@ function stopSong(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if (queue.length === 0) {
     return;
@@ -212,9 +213,9 @@ function skipSong(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if(queue.length === 0){
     return message.channel.send("Got nothin to skip 😔");
@@ -232,15 +233,18 @@ async function searchYt(message) {
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  console.log(message.content);
+
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if (queue.length === 0) {
-    return;
+    return message.channel.send("Im too stupid to queue a searched song when music isnt playing lole!");
   }
 
   let query = message.content.split(" ");
+  console.log(query);
   query.shift();
   query = query.join(" ");
   console.log(query);
@@ -252,6 +256,7 @@ async function searchYt(message) {
       "video"
     ]
   }
+  
   youtube(query, opts, async (err, results) => {
     if (err) return console.log(err);
 
@@ -289,7 +294,6 @@ async function searchYt(message) {
 
   });
 
-  
 }
 
 /**
@@ -302,9 +306,9 @@ async function getNextVideoOnURL(message) {
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if (queue.length === 0) {
     return;
@@ -368,9 +372,9 @@ function pause(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if (queue.length === 0) {
     return;
@@ -389,9 +393,9 @@ function resume(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if (queue.length === 0) {
     return;
@@ -411,9 +415,9 @@ function upNext(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if (queue.length === 0) {
     return;
@@ -438,9 +442,9 @@ function nowPlaying(message){
     return message.channel.send("You have to be in a voice channel to perform music commands !!");
   }
 
-  if (message.channel.name !== 'dj'){
-    return message.channel.send("You need to be in the #dj channel.");
-  }
+  // if (message.channel.name !== 'dj'){
+  //   return message.channel.send("You need to be in the #dj channel.");
+  // }
 
   if (queue.length === 0) {
     return;

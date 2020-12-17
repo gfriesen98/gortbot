@@ -1,9 +1,11 @@
 const Discord = require('discord.js');
 const { prefix, discord_token, smug_path, reacc_path  } = require('./config.json');
 const music = require('./commands/music.js');
+const movie = require('./commands/movie.js');
 const fs = require('fs')
 
 const client = new Discord.Client();
+require('./database/connection');
 
 const smug = [];
 const reacc = [];
@@ -99,6 +101,10 @@ client.on('message', async message => {
     music.upNext(message);
   } else if (message.content.startsWith(`${prefix}current`)){
     music.nowPlaying(message);
+  } else if (message.content.startsWith(`${prefix}addmovie`)){
+    movie.addMovie(message);
+  } else if (message.content.startsWith(`${prefix}showmovies`)){
+    movie.showMovies(message);
   }
 
   else {
