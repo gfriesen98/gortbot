@@ -43,6 +43,8 @@ client.on('message', async message => {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
+
+  //Music commands
   if (message.content.startsWith(`${prefix}play`)) {
     music.playSong(message);
     return;
@@ -60,7 +62,35 @@ client.on('message', async message => {
     music.pause(message);
   } else if (message.content.startsWith(`${prefix}resume`)){
     music.resume(message);
-  } else if (message.content.startsWith(`${prefix}help`)){
+  } else if (message.content.startsWith(`${prefix}next`)){
+    music.upNext(message);
+  } else if (message.content.startsWith(`${prefix}current`)){
+    music.nowPlaying(message);
+  }
+
+  
+  //Reaction commands
+  else if (message.content.startsWith(`${prefix}smug`)){
+    message.channel.send({files: [`${smug_path}/${smug[Math.floor(Math.random()*smug.length)+1]}`]})
+  } else if (message.content.startsWith(`${prefix}reacc`)){
+    message.channel.send({files: [`${reacc_path}/${reacc[Math.floor(Math.random()*reacc.length)+1]}`]})
+  } else if (message.content.startsWith(`${prefix}society`)){
+    message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772965800784691251/UKRrxHDk-Vs0_61C.mp4')
+  } else if (message.content.startsWith(`${prefix}smiling`)){
+    message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772967994769801236/cloutgang.mp4');
+  }
+  
+  
+  //Movie commands
+  else if (message.content.startsWith(`${prefix}reqmovie`)){
+    movie.requestMovie(message);
+  } else if (message.content.startsWith(`${prefix}showreqs`)){
+    movie.showMovieRequests(message);
+  }
+
+
+  //Help
+  else if (message.content.startsWith(`${prefix}help`)){
     message.channel.send(
       "```gortbot commands:\n"+
       "g!play [youtube url]\n"+
@@ -89,25 +119,7 @@ client.on('message', async message => {
       "g!smiling\n```"
     )
   
-  } else if (message.content.startsWith(`${prefix}smug`)){
-    message.channel.send({files: [`${smug_path}/${smug[Math.floor(Math.random()*smug.length)+1]}`]})
-  } else if (message.content.startsWith(`${prefix}reacc`)){
-    message.channel.send({files: [`${reacc_path}/${reacc[Math.floor(Math.random()*reacc.length)+1]}`]})
-  } else if (message.content.startsWith(`${prefix}society`)){
-    message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772965800784691251/UKRrxHDk-Vs0_61C.mp4')
-  } else if (message.content.startsWith(`${prefix}smiling`)){
-    message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772967994769801236/cloutgang.mp4');
-  } else if (message.content.startsWith(`${prefix}next`)){
-    music.upNext(message);
-  } else if (message.content.startsWith(`${prefix}current`)){
-    music.nowPlaying(message);
-  } else if (message.content.startsWith(`${prefix}addmovie`)){
-    movie.addMovie(message);
-  } else if (message.content.startsWith(`${prefix}showmovies`)){
-    movie.showMovies(message);
-  }
-
-  else {
+  } else {
     message.channel.send("g!help to view commands.");
   }
 

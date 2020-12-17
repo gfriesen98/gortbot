@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+const {ip} = require('../config.json')
 
-const connection = 'mongodb://localhost:27017/?gssapiServiceName=mongodb'
+const connection = `mongodb://${ip}:27017/gortbase?gssapiServiceName=mongodb`
 
 mongoose.connect(connection,
 	{
@@ -16,5 +17,3 @@ mongoose.connect(connection,
 				}
 			}
 );
-
-console.log("connected");

@@ -1,19 +1,24 @@
-const Movie = require("../database/movieModel.js");
+const MovieRequest = require("../database/movieRequestModel.js");
 const {MessageEmbed} = require('discord.js');
 
-async function showMovies(message){
+/**
+ * Show movie requests in the chat
+ * @param {String} message 
+ */
+async function showMovieRequests(message){
 	try{
-		const movies = await Movie.find();
+		const movies = await MovieRequest.find();
 		console.log(movies);
 
 		const msg = movies.map((n) => {
 			n.doesOwn = n.doesOwn ? "yes" : "no";
 			let messageEmbed = new MessageEmbed()
 				.setColor('$0dac4e')
-				.setTitle(`${n.name}`)
+				.setTitle(n.name)
 				.setDescription(n.vibes)
-				.addField(`Do it be downloaded: `, n.doesOwn ? "yes" : "no")
-				.addField(`Requested By: `, n.requestor);
+				.addField('Do it be downloaded: ', n.doesOwn ? "yes" : "no")
+				.addField('Have we watched this: ', n.watched ? "yes" : "no")
+				.addField('Requested By: ', n.requestor);
 			return message.channel.send(messageEmbed);
 		})
 
@@ -23,8 +28,11 @@ async function showMovies(message){
 	}	
 }
 
-
-function addMovie(message){
+/**
+ * Adds a movie request
+ * @param {String} message 
+ */
+function requestMovie(message){
 	let args = message.content.split(" ");
 	args.shift();
 	args = args.join();
@@ -34,7 +42,6 @@ function addMovie(message){
 	substring = substring.filter((n) => {
 		console.log(n);
 		if (n !== '' && n !== ',' && n !==' '){
-			n = n.replace(/,/g, " ");
 			return true;
 		} else {
 			return false;
@@ -49,7 +56,7 @@ function addMovie(message){
 
 	console.log(movie);
 	let {name,vibes,doesOwn,requestor} = movie;
-	const model = new Movie({name, vibes, doesOwn, requestor});
+	const model = new MovieRequest({name, vibes, doesOwn, requestor});
 	model.save((err) => {
 		if (err) {
 			console.log(err);
@@ -63,6 +70,6 @@ function addMovie(message){
 
 
 module.exports = {
-	addMovie,
-	showMovies
+	requestMovie,
+	showMovieRequests
 }
