@@ -13,7 +13,7 @@ async function showMovieRequests(message){
 		const msg = movies.map((n) => {
 			n.doesOwn = n.doesOwn ? "yes" : "no";
 			let messageEmbed = new MessageEmbed()
-				.setColor('$0dac4e')
+				.setColor('#0dac4e')
 				.setTitle(n.name)
 				.setDescription(n.vibes)
 				.addField('Do it be downloaded: ', n.doesOwn ? "yes" : "no")
