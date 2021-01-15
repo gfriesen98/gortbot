@@ -68,8 +68,29 @@ function requestMovie(message){
 	return message.channel.send(`${movie.name} added`);
 }
 
+// random number from two numbers given
+function r(message){
+	let args = message.content.split(' ');
+	console.log(args);
+	args.shift();
+	if (args.length > 2) return message.channel.send("Only a range between two numbers is supported");
+	let max, min;
+	
+	if (args[0] > args[1]) return message.channel.send("g!random [min] [max]");
+
+	return message.channel.send(Math.floor(Math.random() * (args[1]- args[0] + 1) + args[0]));
+}
+
+function coinFlip(message){
+	let rnum = Math.floor(Math.random() * (1000 - 0 + 1) + 0);
+	return (rnum % 2 === 0) ? message.channel.send(`Heads \`(calc: ${rnum} % 2 = 0)\``) 
+		 		: message.channel.send(`Tails \`(calc: ${rnum} % 2 = 1)\``); 
+}
+
 
 module.exports = {
 	requestMovie,
-	showMovieRequests
+	showMovieRequests,
+	r,
+	coinFlip
 }

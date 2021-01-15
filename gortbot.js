@@ -86,11 +86,12 @@ client.on('message', async message => {
     movie.requestMovie(message);
   } else if (message.content.startsWith(`${prefix}showreqs`)){
     movie.showMovieRequests(message);
-  }
-
-
+  } else if (message.content.startsWith(`${prefix}random`)) { 
+  	movie.r(message);
+  } else if (message.content.startsWith(`${prefix}flip`)){
+	movie.coinFlip(message);
   //Help
-  else if (message.content.startsWith(`${prefix}help`)){
+  } else if (message.content.startsWith(`${prefix}help`)){
     message.channel.send(
       "```gortbot commands:\n"+
       "g!play [youtube url]\n"+
@@ -110,19 +111,26 @@ client.on('message', async message => {
       "g!recc\n"+
       "   Queues a random recommended song (based off the current song) to the queue.\n"+
       "g!search [search query]]\n"+
-      "   Adds a song to the queue based off a search query."+
+      "   Adds a song to the queue based off a search query.\n"+
+      "g!reqmovie 'title' 'desc' (single quotes required)\n"+
+      "   Requests a movie\n"+
+      "g!showreqs\n"+
+      "Shows a list of movies requests and will spam the fuck outta chat\n"+
       "g!smug\n"+
       "   Posts a smug reaction image.\n"+
       "g!reacc\n"+
       "   Posts an anime reaction image.\n"+
       "g!society\n"+
+      "g!random [min] [max]\n"+
+      "   Shows a random number from a range.\n"+
+      "g!flip\n"+
+      "   Coinflips. Algorithm generates a number from 0 to 1000 and mods it by 2 to get either 1 or 0."+
       "g!smiling\n```"
     )
-  
   } else {
     message.channel.send("g!help to view commands.");
   }
-
+  
 });
 
 client.login(discord_token);
