@@ -5,7 +5,7 @@ const movie = require('./commands/movie.js');
 const fs = require('fs')
 
 const client = new Discord.Client();
-require('./database/connection');
+//require('./database/connection');
 
 const smug = [];
 const reacc = [];
@@ -83,9 +83,10 @@ client.on('message', async message => {
   
   //Movie commands
   else if (message.content.startsWith(`${prefix}reqmovie`)){
-    movie.requestMovie(message);
+    //movie.requestMovie(message);
+    message.channel.send("Movie requests is broken as shit rn");
   } else if (message.content.startsWith(`${prefix}showreqs`)){
-    movie.showMovieRequests(message);
+message.channel.send("Movie requests is broken as shit rn");
   } else if (message.content.startsWith(`${prefix}random`)) { 
   	movie.r(message);
   } else if (message.content.startsWith(`${prefix}flip`)){
