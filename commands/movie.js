@@ -81,6 +81,11 @@ function r(message){
 	return message.channel.send(Math.floor(Math.random() * (args[1]- args[0] + 1) + args[0]));
 }
 
+/**
+ * Flips a coin by getting a number from 1 to 1000 then %2 it to see if it is even or odd
+ * @param {*} message 
+ * @returns 
+ */
 function coinFlip(message){
 	let rnum = Math.floor(Math.random() * (1000 - 0 + 1) + 0);
 	return (rnum % 2 === 0) ? message.channel.send(`Heads \`(calc: ${rnum} % 2 = 0)\``) 
