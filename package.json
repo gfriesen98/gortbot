@@ -4,7 +4,7 @@
   "description": "gortbot",
   "main": "gortbot.js",
   "dependencies": {
-    "@discordjs/opus": "^0.3.3",
+    "@discordjs/opus": "^0.5.0",
     "abbrev": "^1.1.1",
     "abort-controller": "^3.0.0",
     "ansi-regex": "^2.1.1",
