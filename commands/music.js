@@ -3,7 +3,7 @@ const systools = require('../systools');
 const ytdl = require('ytdl-core');
 const youtube = require('youtube-search');
 const { MessageEmbed } = require('discord.js');
-const { google_key } = require('../config.json');
+// const { google_key } = require('../config.json');
 
 var queue = [];
 var voiceChannel = null;
