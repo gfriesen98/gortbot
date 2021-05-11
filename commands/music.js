@@ -1,4 +1,5 @@
 //const ytdl = require('ytdl-core-discord');
+const systools = require('../systools');
 const ytdl = require('ytdl-core');
 const youtube = require('youtube-search');
 const { MessageEmbed } = require('discord.js');
@@ -15,7 +16,6 @@ function checkQueueConflicts(title){
     if (title === queue[i].title) {
       return i;
     }
-
     return false;
   }
 }
@@ -41,7 +41,7 @@ async function playSong(message) {
   //connect to vc
   connection = await voiceChannel.join();
 
-  //Should only run this portion of the if statement the first time g!play is used.
+  // Should only run this portion of the if statement the first time g!play is used.
   // We need to start a queue as well as start playback on the same command
   // I should probably break it out
 
@@ -50,7 +50,7 @@ async function playSong(message) {
     if (!songInfo){
       playSong(message);
     }
-    console.log(songInfo);
+
     queue.push(
       {
         title: songInfo.videoDetails.title,
@@ -82,7 +82,11 @@ async function playSong(message) {
             playSong(message);
           }
         })
-        .on("error", error => console.log(error));
+        .on("error", error => {
+          console.log(error);
+          systools.saveLogs("PLAY_SONG", error.toString());
+          message.channel.send("FUCK bots broken again @ "+new Date(Date.now()))
+        });
       
       let messageEmbed = new MessageEmbed()
         .setColor('#0dac4e')
@@ -94,7 +98,8 @@ async function playSong(message) {
 
     } catch (err) {
       console.log(err);
-      message.channel.send("🙂 Having some issues playing the current song. I'll try again 🙂");
+      systools.saveLogs("PLAY_SONG", err.toString());
+      message.channel.send("FUCK bot cant play the song rn @ "+new Date(Date.now()));
       playSong(message);
     }
 
@@ -153,6 +158,7 @@ async function queueSong(message){
 
   } catch (err) {
     console.log(err);
+    systools.saveLogs("QUEUE_SONG", err.toString());
     return message.channel.send("🙂 Had some issues getting video data. Try queueing again 🙂");
   }
 }

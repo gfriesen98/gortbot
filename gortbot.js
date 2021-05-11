@@ -1,33 +1,34 @@
+require('dotenv').config();
 const Discord = require('discord.js');
-const { prefix, discord_token, smug_path, reacc_path  } = require('./config.json');
+const prefix = process.env.PREFIX
 const music = require('./commands/music.js');
 const movie = require('./commands/movie.js');
+const gortflix = require('./commands/gortflix');
+const systools = require('./systools');
 const fs = require('fs')
-
 const client = new Discord.Client();
-//require('./database/connection');
+require('./database/connection');
 
 const smug = [];
 const reacc = [];
 
-fs.readdir(smug_path, (err, files) => {
-  if (err) return console.log('Error readin directory');
-
+fs.readdir(process.env.SMUG_PATH, (err, files) => {
+  if (err) {
+    return systools.saveLogs("SMUG_LOAD", err.toString());
+  }
   files.forEach((file) => {
-    console.log(file);
     smug.push(file);
-  })
-})
+  });
+}); console.log('SMUG LOADED');
 
-fs.readdir(reacc_path, (err, files) => {
-  if (err) return console.log('Error readin directory');
-
+fs.readdir(process.env.REACC_PATH, (err, files) => {
+  if (err) {
+    return systools.saveLogs("REACC_LOAD", err.toString());
+  } 
   files.forEach((file) => {
-    console.log(file);
     reacc.push(file);
-  })
-})
-
+  });
+}); console.log('REACC LOADED');
 
 client.once('ready', () => {
   console.log("====gortbot ready====");
@@ -68,12 +69,19 @@ client.on('message', async message => {
     music.nowPlaying(message);
   }
 
+  //gortflix commands
+  else if (message.content.startsWith(`${prefix}addme`)) {
+    gortflix.requestAddAccount(message);
+  } else if (message.content.startsWith(`${prefix}test`)) {
+    gortflix.test(message);
+  }
+
   
   //Reaction commands
   else if (message.content.startsWith(`${prefix}smug`)){
-    message.channel.send({files: [`${smug_path}/${smug[Math.floor(Math.random()*smug.length)+1]}`]})
+    message.channel.send({files: [`${process.env.SMUG_PATH}/${smug[Math.floor(Math.random()*smug.length)+1]}`]})
   } else if (message.content.startsWith(`${prefix}reacc`)){
-    message.channel.send({files: [`${reacc_path}/${reacc[Math.floor(Math.random()*reacc.length)+1]}`]})
+    message.channel.send({files: [`${process.env.REACC_PATH}/${reacc[Math.floor(Math.random()*reacc.length)+1]}`]})
   } else if (message.content.startsWith(`${prefix}society`)){
     message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772965800784691251/UKRrxHDk-Vs0_61C.mp4')
   } else if (message.content.startsWith(`${prefix}smiling`)){
@@ -134,4 +142,4 @@ message.channel.send("Movie requests is broken as shit rn");
   
 });
 
-client.login(discord_token);
+client.login(process.env.DISCORD_TOKEN);

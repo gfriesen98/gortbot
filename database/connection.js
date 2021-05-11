@@ -1,19 +1,18 @@
-const mongoose = require('mongoose');
-const {ip} = require('../config.json')
-
-const connection = `mongodb://${ip}:27017/gortbase?gssapiServiceName=mongodb`
-
-mongoose.connect(connection,
-	{
-		useNewUrlParser: true,
-		useUnifiedTopology: true, 
-		useCreateIndex: true
-	}, 
-			(err) => {
-				if (err) {
-					throw err;
-				} else {
-					console.log("Connected to DB");
-				}
-			}
+const mongoose     = require('mongoose');
+const connection = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@10.0.0.186:27017/gortflix?authSource=admin&retryWrites=true&w=majority`;
+mongoose.connect(connection, 
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  },
+    (err) => {
+      console.log('poop');
+      if (err) {
+        throw err;
+      } else {
+        console.log("Connected to DB");
+      }
+    }
 );
