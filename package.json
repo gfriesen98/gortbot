@@ -109,7 +109,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "nodemon --ignore 'logs/' gortbot.js"
+    "start": "nodemon --ignore 'logs/' gortbot.js"
   },
   "author": "garett friesen",
   "license": "ISC"
