@@ -7,6 +7,8 @@ const gortflix = require('./commands/gortflix');
 const systools = require('./systools');
 const fs = require('fs')
 const client = new Discord.Client();
+const Uwuifier = require('uwuifier');
+const uwuifier = new Uwuifier();
 require('./database/connection');
 
 const smug = [];
@@ -40,10 +42,13 @@ client.once('disconnect', () => {
   console.log('////disconnecting////');
 });
 
+function uwu(message) {
+
+}
+
 client.on('message', async message => {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
-
 
   //Music commands
   if (message.content.startsWith(`${prefix}play`)) {
@@ -86,6 +91,11 @@ client.on('message', async message => {
     message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772965800784691251/UKRrxHDk-Vs0_61C.mp4')
   } else if (message.content.startsWith(`${prefix}smiling`)){
     message.channel.send('https://cdn.discordapp.com/attachments/648336970048602119/772967994769801236/cloutgang.mp4');
+  }
+
+  else if(message.content.startsWith(`${prefix}uwu`)){
+    const m = message.content.split(" ");
+    message.channel.send(uwuifier.uwuifySentence(m[1]));
   }
   
   
