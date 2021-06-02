@@ -8,7 +8,15 @@ const systools = require('./systools');
 const fs = require('fs')
 const client = new Discord.Client();
 const Uwuifier = require('uwuifier');
-const uwuifier = new Uwuifier();
+const uwuifier = new Uwuifier({
+  spaces: {
+    faces: 0.5,
+    actions: 0.25,
+    stutters: 0.1
+  },
+  words: 1,
+  exlamations: 1
+});
 require('./database/connection');
 
 const smug = [];
