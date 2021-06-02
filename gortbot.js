@@ -96,7 +96,7 @@ client.on('message', async message => {
   else if(message.content.startsWith(`${prefix}uwu`)){
     let m = message.content.split(" ");
     m.shift();
-    m = m.join();
+    m = m.join(" ");
     message.channel.send(uwuifier.uwuifySentence(m));
   }
   
