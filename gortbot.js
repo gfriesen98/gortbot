@@ -97,7 +97,7 @@ client.on('message', async message => {
     let m = message.content.split(" ");
     m.shift();
     m = m.join(" ");
-    message.channel.send(uwuifier.uwuifySentence(m));
+    message.channel.send(`${message.author.username} said: ${uwuifier.uwuifySentence(m)}`);
   }
   
   
